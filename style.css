@@ -1,0 +1,27 @@
+/* Empty. Add your own CSS if you like */
+.hireTrackHalfWidth{
+    width:33.33% !important;
+   
+}
+
+.astrickColor {
+    color: red;
+}
+
+.radioBtn {
+    width:49% !important;
+}
+
+.wrap {
+    white-space: normal !important;
+}
+
+.companyNameFontSize {
+    font-size:normal;
+}
+
+.spinner svg {
+    stroke:white !important;
+
+}
+

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html ng-app="starter">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+    <script src="cordova_plugins.js"></script>
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+  </head>
+  <body class="platform-ios platform-android platform-cordova platform-webview">
+      <div ng-controller="MainCtrl">
+          <ion-nav-view animation="slide-left-right"></ion-nav-view>
+      
+      <script id="hireTrackSettingsPage.html" type="text/ng-template" >
+          <ion-view>
+          <ion-header-bar class="bar-header bar-positive">
+          <a class="button button-icon icon ion-ios-home-outline" nav-direction="back" href="#/"></a>
+          <h1 class="title">Settings</h1>
+          </ion-header-bar>
+          <ion-content has-header="true" padding="true">
+          
+          <div class="list" data-ng-init="hireTrackCheckForUrlAndPassCode(hireTrack)">
+          <label class="item item-input item-floating-label">
+          <span class="input-label">http://www.server.com/webservice.svc</span>
+          <input type="text" name="hireTrack.webServiceURL" ng-model="hireTrack.webServiceURL" placeholder="http://www.server.com/webservice.svc">
+          </label>
+          <label class="item item-input item-floating-label">
+          <span class="input-label">4 Digit Passcode</span>
+          <input type="password" name="hireTrack.passCode" ng-model="hireTrack.passCode" placeholder="4 Digit Passcode">
+          </label>
+          </label>
+          
+          
+          <a class="button button-block icon-left ion-ios-locked-outline button-positive button-left-right-padding" ng-click="saveHireTrackCredentials(hireTrack);">
+          Save
+          </a>
+          </div>
+          
+          </ion-content>
+          <div class="bar bar-footer bar-light">
+          <div class="title" style="font-size:small !important;">V1.0.1</div>
+          </div>
+          </ion-view>
+          </script>
+      
+      
+      <script id="hireTrackNavigationPage.html" type="text/ng-template">
+          
+          <ion-view>
+          <ion-header-bar class="bar-header bar-positive">
+          <h1 class="title">Hire Track</h1>
+          <a class="button button-icon icon ion-ios-gear-outline" href="#/hireTrackSettingsPage"></a>
+          </ion-header-bar>
+          
+          <ion-content has-header="true" padding="true">
+          <div class="list" data-ng-init="hireTrackNavigationPageContent(hireTrack)">
+          
+          <a nav-transition="android" nav-direction="forward" class="button button-block icon-left ion-ios-keypad-outline button-positive button-left-right-padding" ng-disabled="isDisabled" ng-model="hireTrack.companyBtn" ng-click="hireTrackGenerateCompanyList();"  >
+          Company
+          </a>
+          
+          <a nav-transition="android" nav-direction="forward" class="button button-block icon-left ion-ios-person-outline button-positive button-left-right-padding" ng-disabled="isDisabled" ng-model="hireTrack.PersonBtn" ng-click="hireTrackGeneratePersonList();">
+          Person
+          </a>
+          </div>
+          </ion-content>
+          <div class="bar bar-footer bar-light">
+          <div class="title" style="font-size:small !important;">V1.0.1</div>
+          </div>
+          </ion-view>
+          </script>
+      
+
+      <script id="hireTrackCompanyListPage.html" type="text/ng-template">
+          <ion-view>
+          <ion-header-bar class="bar-header bar-positive">
+        <a class="button button-icon icon ion-ios-arrow-left" nav-direction="back" href="#/"></a>
+          <h1 class="title">Company</h1>
+          </ion-header-bar>
+          
+          <div class="bar bar-subheader bar-positive">
+          <a class="button button-icon icon ion-plus-round hireTrackHalfWidth" ng-click="hideTitleContent();" href="#/hireTrackAddCompanyPage"></a>
+          <a class="hireTrackHalfWidth button button-icon icon ion-edit" ng-click="data.showDelete = !data.showDelete; data.showReorder = false;hireTrackShowOptionToDelete();" ng-show="hireTrackHideShowEditIcon"></a>
+          <a class="hireTrackHalfWidth button button-icon icon ion-checkmark" ng-click="data.showDelete = !data.showDelete; data.showReorder = false;hireTrackShowOptionToDelete();" ng-show="hireTrackHideShowCheckMarkIcon"></a>
+          <a class="button button-icon icon ion-search hireTrackHalfWidth" href="#/HireTrackSearchCompanyPage" ng-click="hireTrackClearSearchFields();"></a>
+          </div>
+
+          <ion-content class="has-header has-subheader" padding="true">
+          <div class="bar item-input-inset">
+          <label class="item-input-wrapper">
+          <i class="icon ion-ios-search placeholder-icon"></i>
+          <input type="search" ng-model="companySearchTextBox" placeholder="Search">
+          </label>
+          <button class="button button-clear" ng-click="companySearchTextBox = ''">
+          Cancel
+          </button>
+          </div><br>
+          <ion-list show-delete="data.showDelete">
+          <ion-item ng-repeat="opt in opts | filter:companySearchTextBox" class="item-remove-animate">
+          <div id={{opt.companyCounter}} ng-click="hireTrackCompanyListView($event);">
+          <b class="companyNameFontSize wrap" id={{opt.companyCounter}} >{{ opt.companyName }}</b>
+          <p style="font-size:small;" id={{opt.companyCounter}} > {{ opt.townName }}</p>
+          <p style="font-size:small;" id={{opt.companyCounter}} > {{ opt.county }}</p>
+          <p style="font-size:small;" id={{opt.companyCounter}} > {{ opt.postcode }}</p>
+          <ion-delete-button class="ion-minus-circled" id={{opt.companyCounter}} ng-click="hireTrackDeleteCompany($event)" >
+          </ion-delete-button>
+          </div>
+          </ion-item>
+          </ion-list>
+          </ion-content>
+          </ion-view>
+          </script>
+
+    <script id="hireTrackAddCompanyPage.html" type="text/ng-template">
+        <ion-view>
+        <ion-header-bar class="bar-header bar-positive">
+        <a class="button button-icon icon ion-ios-arrow-left" nav-direction="back" href="#/hireTrackCompanyListPage"></a>
+        <h1 class="title">{{title}}</h1>
+        <a class="button button-icon icon ion-ios-filing-outline" nav-direction="back" ng-click="hireTrackAddNewCompany(addCompanyDetails);"></a>
+        </ion-header-bar>
+        
+        
+        <ion-content has-header="true" padding="true" >
+         <center>(<span class="astrickColor">&nbsp;*</span>All Required Fields)</center><br>
+        
+        <div class="list" >
+        
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Name<span class="astrickColor">&nbsp;*</span></span>
+        <input type="text" placeholder="John" name="addCompanyDetails.hireTrackCompanyName" ng-model="addCompanyDetails.hireTrackCompanyName">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Telephone<span class="astrickColor">&nbsp;*</span></span>
+        <input type="tel" placeholder="1234" name="addCompanyDetails.hireTrackCompanyTelephone" ng-model="addCompanyDetails.hireTrackCompanyTelephone">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Mobile</span>
+        <input type="tel" placeholder="123456789" name="addCompanyDetails.hireTrackCompanyMobile" ng-model="addCompanyDetails.hireTrackCompanyMobile">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Facsimile</span>
+        <input type="tel" placeholder="1234" name="addCompanyDetails.hireTrackCompanyFacsimile" ng-model="addCompanyDetails.hireTrackCompanyFacsimile">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Email<span class="astrickColor">&nbsp;*</span></span>
+        <input type="email" placeholder="eg:example@example.com" name="addCompanyDetails.hireTrackCompanyEmail" ng-model="addCompanyDetails.hireTrackCompanyEmail">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Address 1</span>
+        <textarea placeholder="Address line 1" name="addCompanyDetails.hireTrackCompanyAddressline1" ng-model="addCompanyDetails.hireTrackCompanyAddressline1"></textarea>
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Address 2</span>
+        <textarea placeholder="Address line 2" name="addCompanyDetails.hireTrackCompanyAddressline2" ng-model="addCompanyDetails.hireTrackCompanyAddressline2"></textarea>
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Address 3</span>
+        <textarea placeholder="Address line 3" name="addCompanyDetails.hireTrackCompanyAddressline3" ng-model="addCompanyDetails.hireTrackCompanyAddressline3"></textarea>
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Town</span>
+        <input type="text" placeholder="Springfield, Missouri" name="addCompanyDetails.hireTrackCompanyTown" ng-model="addCompanyDetails.hireTrackCompanyTown">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">County</span>
+        <input type="text" placeholder="Beaver County" name="addCompanyDetails.hireTrackCompanyCounty" ng-model="addCompanyDetails.hireTrackCompanyCounty">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">PostCode</span>
+        <input type="number" placeholder="1234" name="addCompanyDetails.hireTrackCompanyPostCode" ng-model="addCompanyDetails.hireTrackCompanyPostCode">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Country</span>
+        <input type="text" placeholder="India" name="addCompanyDetails.hireTrackCompanyCountry" ng-model="addCompanyDetails.hireTrackCompanyCountry">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Website</span>
+        <input type="text" placeholder="1234" name="addCompanyDetails.hireTrackCompanyURL" ng-model="addCompanyDetails.hireTrackCompanyURL">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Accref</span>
+        <input type="tel" placeholder="1234" name="addCompanyDetails.hireTrackCompanyAccRef" ng-model="addCompanyDetails.hireTrackCompanyAccRef">
+        </label>
+       
+        </div>
+        </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="HireTrackSearchCompanyPage.html" type="text/ng-template">
+        
+        <ion-view>
+        <ion-header-bar class="bar-header bar-positive">
+        <a class="button button-icon icon ion-ios-arrow-left" nav-direction="back" href="#/hireTrackCompanyListPage"></a>
+        <h1 class="title">Search Company</h1>
+        <a class="button button-icon ion-ios-search" ng-click="hireTrackCompanyAdvancedSearch(item);"></a>
+        </ion-header-bar>
+        <ion-content has-header="true" padding="true">
+        <div class="list" data-ng-init="hireTrackSearchCompanyPgLoadContent();">
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Name</span>
+        <input type="text" ng-model="item.NameField" ng-disabled="item.nameField" placeholder="John">
+        </label>
+        <label class="item item-input item-stacked-label">
+        <span class="input-label">Town</span>
+        <input type="text" ng-model="item.TownField" ng-disabled="item.townField" placeholder="Springfield, Missouri">
+        </label><br>
+        
+        <div class="list">
+        
+        <ion-checkbox id={{item.id}} ng-repeat="item in checkbox" ng-checked="false" ng-model="item.check" ng-change="getCompanyCheckBoxCounterID(item,item.id);">{{ item.text }}</ion-checkbox>
+        
+        </div><br>
+        
+        <ion-list>
+        <ion-radio ng-model="item.radio" value="and" class="radioBtn" style="float:left;">AND</ion-radio>
+        <ion-radio ng-model="item.radio" value="or" class="radioBtn" style="float:right;">OR</ion-radio>
+        </ion-list>
+     
+        </div><br><br>
+        
+        <button class="button button-block icon-left ion-ios-trash-outline button-positive" ng-click="hireTrackClearAllFields(item);">
+        Clear All
+        </button>
+    
+    
+        </ion-content>
+        </ion-view>
+    </script>
+
+   <!-- Person -->
+   
+   
+   <script id="hireTrackPersonListPage.html" type="text/ng-template">
+       <ion-view>
+       <ion-header-bar class="bar-header bar-positive">
+       <a class="button button-icon icon ion-ios-arrow-left" nav-direction="back" href="#/"></a>
+       <h1 class="title">Person</h1>
+       </ion-header-bar>
+       
+       <div class="bar bar-subheader bar-positive">
+       
+       <a class="button button-icon icon ion-plus-round hireTrackHalfWidth" ng-click="hidePersonTitleContent();" href="#/hireTrackAddPersonPage"></a>
+       <a class="hireTrackHalfWidth button button-icon icon ion-edit" ng-click="data.showDelete = !data.showDelete; data.showReorder = false;hireTrackUserShowOptionToDelete();" ng-show="hireTrackUserHideShowEditIcon"></a>
+       <a class="hireTrackHalfWidth button button-icon icon ion-checkmark" ng-click="data.showDelete = !data.showDelete; data.showReorder = false;hireTrackUserShowOptionToDelete();" ng-show="hireTrackUserHideShowCheckMarkIcon"></a>
+       <a class="button button-icon icon ion-search hireTrackHalfWidth" href="#/HireTrackSearchPersonPage" ng-click="hireTrackClearPersonSearchFields();"></a>
+       </div>
+       
+       <ion-content class="has-header has-subheader" padding="true">
+       <div class="bar item-input-inset">
+       <label class="item-input-wrapper">
+       <i class="icon ion-ios-search placeholder-icon"></i>
+       <input type="search" ng-model="personSearchTextBox" placeholder="Search">
+       </label>
+       <button class="button button-clear" ng-click="personSearchTextBox = ''">
+       Cancel
+       </button>
+       </div><br>
+       <ion-list show-delete="data.showDelete">
+       <ion-item ng-repeat="person in Personopts | filter:personSearchTextBox" class="item-remove-animate">
+       <div id={{person.personCounter}} ng-click="hireTrackPersonListView($event);">
+       <b class="companyNameFontSize wrap" id={{person.personCounter}}>{{ person.personName }}</b>
+       <br><span style="font-size:small;" id={{person.personCounter}}> {{ person.townName }}</span>
+       <ion-delete-button class="ion-minus-circled" id={{person.personCounter}} data-ng-click="hireTrackDeletePerson($event)" >
+       </ion-delete-button>
+       </div>
+       </ion-item>
+       </ion-list>
+       </ion-content>
+       </ion-view>
+       </script>
+
+
+
+    <script id="hireTrackAddPersonPage.html" type="text/ng-template">
+    
+    <ion-view>
+    <ion-header-bar class="bar-header bar-positive">
+    <a class="button button-icon icon ion-ios-arrow-left" nav-direction="back" href="#/hireTrackPersonListPage"></a>
+    <h1 class="title">{{personTitle}}</h1>
+    <a class="button button-icon icon ion-ios-filing-outline" nav-direction="back" ng-click="hireTrackAddNewPerson(addPersonDetails);"></a>
+    </ion-header-bar>
+    
+    <ion-content has-header="true" padding="true" >
+    <div class="list">
+    
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Title</span>
+    <input type="text" placeholder="Title" name="addPersonDetails.hireTrackPersonTitle" ng-model="addPersonDetails.hireTrackPersonTitle">
+    </label>
+    
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Forename</span>
+    <input type="text" placeholder="Forename" name="addPersonDetails.hireTrackPersonForeName" ng-model="addPersonDetails.hireTrackPersonForeName">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Surename</span>
+    <input type="text" placeholder="Surename" name="addPersonDetails.hireTrackPersonSurename" ng-model="addPersonDetails.hireTrackPersonSurename">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Salutation</span>
+    <input type="text" placeholder="Salutation" name="addPersonDetails.hireTrackPersonSalutation" ng-model="addPersonDetails.hireTrackPersonSalutation">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Nickname</span>
+    <input type="text" placeholder="Nickname" name="addPersonDetails.hireTrackPersonNickname" ng-model="addPersonDetails.hireTrackPersonNickname">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">DOB</span>
+    <input type="date" placeholder="DOB" name="addPersonDetails.hireTrackPersonDOB" ng-model="addPersonDetails.hireTrackPersonDOB">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Telephone</span>
+    <input type="tel" placeholder="Telephone" name="addPersonDetails.hireTrackPersonTelephone" ng-model="addPersonDetails.hireTrackPersonTelephone">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Facsimile</span>
+    <input type="tel" placeholder="1234" name="addPersonDetails.hireTrackPersonFacsimile" ng-model="addPersonDetails.hireTrackPersonFacsimile">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Mobile</span>
+    <input type="tel" placeholder="123456789" name="addPersonDetails.hireTrackPersonMobile" ng-model="addPersonDetails.hireTrackPersonMobile">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Email</span>
+    <input type="email" placeholder="eg:example@example.com" name="addPersonDetails.hireTrackPersonEmail" ng-model="addPersonDetails.hireTrackPersonEmail">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Address 1</span>
+    <textarea placeholder="Address line 1" name="addPersonDetails.hireTrackPersonAddressline1" ng-model="addPersonDetails.hireTrackPersonAddressline1"></textarea>
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Address 2</span>
+    <textarea placeholder="Address line 2" name="addPersonDetails.hireTrackPersonAddressline2" ng-model="addPersonDetails.hireTrackPersonAddressline2"></textarea>
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Address 3</span>
+    <textarea placeholder="Address line 3" name="addPersonDetails.hireTrackPersonAddressline3" ng-model="addPersonDetails.hireTrackPersonAddressline3"></textarea>
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Town</span>
+    <input type="text" placeholder="Springfield, Missouri" name="addPersonDetails.hireTrackPersonTown" ng-model="addPersonDetails.hireTrackPersonTown">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">County</span>
+    <input type="text" placeholder="Beaver County" name="addPersonDetails.hireTrackPersonCounty" ng-model="addPersonDetails.hireTrackPersonCounty">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">PostCode</span>
+    <input type="number" placeholder="1234" name="addPersonDetails.hireTrackPersonPostCode" ng-model="addPersonDetails.hireTrackPersonPostCode">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Country</span>
+    <input type="text" placeholder="India" name="addPersonDetails.hireTrackPersonCountry" ng-model="addPersonDetails.hireTrackPersonCountry">
+    </label>
+    </div>
+    </ion-content>
+    </ion-view>
+    
+    </script>
+
+
+    <script id="HireTrackSearchPersonPage.html" type="text/ng-template">
+    
+    <ion-view>
+    <ion-header-bar class="bar-header bar-positive">
+    <a class="button button-icon icon ion-ios-arrow-left" nav-direction="back" href="#/hireTrackPersonListPage"></a>
+    <h1 class="title">Search Person</h1>
+    <a class="button button-icon ion-ios-search" ng-click="hireTrackPersonAdvancedSearch(item);"></a>
+    </ion-header-bar>
+    <ion-content has-header="true" padding="true">
+    <div class="list" data-ng-init="hireTrackSearchPersonPgLoadContent();">
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Forename</span>
+    <input type="text" ng-model="item.Forename" ng-disabled="item.foreName" placeholder="John">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Surname</span>
+    <input type="text" ng-model="item.Surname" ng-disabled="item.surName" placeholder="Miller">
+    </label>
+    <label class="item item-input item-stacked-label">
+    <span class="input-label">Nickname</span>
+    <input type="text" ng-model="item.Nickname" ng-disabled="item.nickName" placeholder="Mike">
+    </label>
+    <br>
+    
+  
+    <div class="list">
+    <ion-checkbox ng-checked="false" ng-model="item.crewskills" ng-click="loadCrewSkillsOptions(item);">CrewSkills</ion-checkbox>
+  
+    <div ng-show="searchPersonCrewSkillsCheckBox">
+    
+    <ion-checkbox id={{item.id}} ng-repeat="item in personCrewSkillsCheckbox" ng-checked="false" ng-model="item.crewSkillsCheck" ng-change="getPersonCheckBoxCounterID(item,item.id);">{{ item.text }}</ion-checkbox>
+
+    </div>
+    
+    <div ng-show="searchPersonCheckBox">
+    <ion-checkbox id={{item.id}} ng-repeat="item in personCheckbox" ng-checked="false" ng-model="item.check" ng-change="getPersonCheckBoxCounterID(item,item.id);">{{ item.text }}</ion-checkbox>
+    
+    </div>
+    </div>
+    <br>
+    
+    <ion-list>
+    <ion-radio ng-model="item.radio" value="and" class="radioBtn" style="float:left;">AND</ion-radio>
+    <ion-radio ng-model="item.radio" value="or" class="radioBtn" style="float:right;">OR</ion-radio>
+    </ion-list>
+    
+    </div><br><br>
+    
+    <button class="button button-block icon-left ion-ios-trash-outline button-positive" ng-click="hireTrackPersonClearAllFields(item);">
+    Clear All
+    </button>
+
+
+    </ion-content>
+    </ion-view>
+    </script>
+
+</div>
+  </body>
+</html>
